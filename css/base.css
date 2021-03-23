@@ -29,3 +29,16 @@ select{
     margin-left: 750px;
     font-size: 30px;
 }
+#button1{
+   
+    padding: 16px;
+    height: 100px;
+    width: 100px;
+}
+#button2{
+    
+     padding: 16px;
+    margin-left: 750px;
+    height: 100px;
+    width: 100px;
+}
