@@ -1,17 +1,31 @@
 .allimg{
     width: 300px;
     height: 300px;
+    
 }
 #photo-template{
-    display: flex;
-    flex-direction: row-reverse;
+    
+    
     
 }
 #photo-template div{
-    background-color: #f1f1f1;
+background-color: #f1f1f1;
   width: 100px;
   margin: 10px;
   text-align: center;
   line-height: 75px;
   font-size: 30px;
+ 
+}
+div{
+    float: right;
+    padding: 30px;
+    margin-right: 60px;
+    border-style: solid;
+    margin: 30px;
+    background-color: lightgrey;
+}
+select{
+    margin-left: 750px;
+    font-size: 30px;
 }

@@ -1,61 +1,67 @@
 'use strict';
-let allimg=[];
-let allkey=[];
-
-
-function imge(image_url,title,description,keyword,horns){
-    this.image_url=image_url;
-    this.title=title;
-    this.description=description;
-    this.keyword=keyword;
-    this.horns=horns;
+let allimg = [];
+let keyWord = [];
+let index = 0;
+function Imge(img_url, title, description, keyword, horns){
+    this.img_url = img_url;
+    this.title = title;
+    this.description = description;
+    this.keyword = keyword;
+    this.horns = horns;
+    this.id = index;
     allimg.push(this)
-    allkey.push(this.keyword)
 }
- console.log(allimg);
- console.log(allkey);
- console.log('test');
- 
-imge.prototype.render=function(){ 
-    let imgsec=$('#photo-template').clone();
-    $('main').append(imgsec);
-    $('select').append(`<option value='${this.keyword}'>${this.keyword}</option>`);
-
-    imgsec.find('h2').text(this.title);
-    imgsec.find('img').attr('src', this.image_url);
-    imgsec.find('p').text(this.description)
-    imgsec.removeAttr('id');
-
-    
+let container;
+Imge.prototype.renderAll = function() {
+    container = $('#photo-template').clone();
+    $('main').append(container);
+    container.find('h2').text(this.title);
+    container.find('img').attr('src',this.img_url);
+    container.find('p').text(this.keyword);
+    container.removeAttr('id');
+    container.attr('id', this.id);
+    index++;
 }
-// function castvote() { 
-//     var sel = document.getElementById("select");
-//  console.log(sel);
-//     alert(sel.options[sel.selectedIndex].value); 
-  
-//  }
-//  castvote();
+Imge.prototype.addnewOption = function(){ 
+    if (keyWord.includes(this.keyword)){
 
-function getimgData() {
-    console.log('test2');
+    }else{
+        keyWord.push(this.keyword)
+        let newOption = $('<option></option>');
+        $('#select').append(newOption);
+        newOption.text(this.keyword);
+}}
+
+function renderSelect () {
+    $('#select').on('click', function(){
+        for (let i = 0; i<index; i++){
+            if (allimg[i].keyword == $('#select').val()) {
+                $('#'+i).show();
+            }else{
+                if($('#select').val() == 'default'){
+                    $('#'+i).show();
+                }else{
+                $('#'+i).hide();
+            }}
+        }
+    })
+}
+
+
+function getData() {
     const ajaxSettings = {
         method: 'get',
         dataType: 'json'
+    };
+    $.ajax('data.json', ajaxSettings).then( data => {
+        data.forEach(element => {
+            let newAnimal = new Imge(element.image_url, element.title, element.description, element.keyword, element.horns);
+            newAnimal.renderAll();
+            newAnimal.addnewOption();
+        });
     }
-    $.ajax('data.json', ajaxSettings).then(data =>{
-    console.log("we got the data!!")
-    data.forEach(element => {
-        let imgobj=new imge(element.image_url,element.title,element.description,element.keyword,element.horns)
-        
-    imgobj.render();
     
+    )}
 
-  
-    });
-})
-
-
-}
-
-$('document').ready(getimgData);
-
+$('document').ready(getData);
+renderSelect();
