@@ -1,8 +1,9 @@
 'use strict';
 let allimg = [];
 let keyWord = [];
-let index = 0;
-function Imge(img_url, title, description, keyword, horns){
+
+
+function Imge(img_url, title, description, keyword, horns) {
     this.img_url = img_url;
     this.title = title;
     this.description = description;
@@ -10,39 +11,46 @@ function Imge(img_url, title, description, keyword, horns){
     this.horns = horns;
     this.id = index;
     allimg.push(this)
+
 }
-let container;
-Imge.prototype.renderAll = function() {
-    container = $('#photo-template').clone();
-    $('main').append(container);
-    container.find('h2').text(this.title);
-    container.find('img').attr('src',this.img_url);
-    container.find('p').text(this.keyword);
-    container.removeAttr('id');
-    container.attr('id', this.id);
+let index = 0;
+let x;
+Imge.prototype.renderAll = function () {
+    x = $('#photo-template').clone();
+    $('main').append(x);
+    x.find('h2').text(this.title);
+    x.find('img').attr('src', this.img_url);
+    x.find('p').text(this.description);
+    x.removeAttr('id');
+    x.attr('id', this.id);
     index++;
 }
-Imge.prototype.addnewOption = function(){ 
-    if (keyWord.includes(this.keyword)){
-
-    }else{
-        keyWord.push(this.keyword)
+keyWord.push(this.keyword)
+console.log(keyWord);
+Imge.prototype.filloption = function () {
+    for (let i = 0; i < keyWord.length; i++) {
         let newOption = $('<option></option>');
-        $('#select').append(newOption);
-        newOption.text(this.keyword);
-}}
 
-function renderSelect () {
-    $('#select').on('click', function(){
-        for (let i = 0; i<index; i++){
+        if ($('option').val() != keyWord[i]) {
+            $('#select').append(newOption);
+            newOption.text(this.keyword);
+        }
+    }
+}
+
+function renderSelect() {
+    $('#select').on('click', function () {
+        for (let i = 0; i < index; i++) {
             if (allimg[i].keyword == $('#select').val()) {
-                $('#'+i).show();
-            }else{
-                if($('#select').val() == 'default'){
-                    $('#'+i).show();
-                }else{
-                $('#'+i).hide();
-            }}
+                $('#' + i).show();
+            } else {
+                if ($('#select').val() == 'alloption') {
+                    $('#' + i).show();
+                } else {
+                    $('#' + i).hide();
+                }
+                
+            }
         }
     })
 }
@@ -53,15 +61,16 @@ function getData() {
         method: 'get',
         dataType: 'json'
     };
-    $.ajax('data.json', ajaxSettings).then( data => {
+    $.ajax('data.json', ajaxSettings).then(data => {
         data.forEach(element => {
-            let newAnimal = new Imge(element.image_url, element.title, element.description, element.keyword, element.horns);
-            newAnimal.renderAll();
-            newAnimal.addnewOption();
+            let newimg = new Imge(element.image_url, element.title, element.description, element.keyword, element.horns);
+            newimg.renderAll();
+            newimg.filloption();
         });
     }
-    
-    )}
+
+    )
+}
 
 $('document').ready(getData);
 renderSelect();
